@@ -7,16 +7,30 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Chess</title>
     <style>
+        body {
+            font-size: 1.2rem;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
         main {
             position: relative;
         }
 
-        #capturedBlack {
+        #statusBox {
             position: absolute;
             top: 0%;
             left: 50%;
             width: 50%;
-            height: 50%;
+            height: 10%;
+            padding: 0.6rem;
+        }
+
+        #capturedBlack {
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            width: 50%;
+            height: 45%;
         }
 
         #capturedWhite {
@@ -24,7 +38,7 @@
             bottom: 0%;
             left: 50%;
             width: 50%;
-            height: 50%;
+            height: 45%;
         }
 
         .container {
@@ -94,7 +108,7 @@
             border-radius: 10px;
         }
 
-        .popup {
+        .hidden {
             display: none;
         }
 
@@ -103,8 +117,8 @@
             display: none;
         }
 
-        .whitePieces .lPiecesDiv,
-        .blackPieces .dPiecesDiv {
+        .lPieces .lPiecesDiv,
+        .dPieces .dPiecesDiv {
             display: flex;
         }
     </style>
@@ -116,6 +130,7 @@
     <main role="main">
         <div class="container" id="chessField">
         </div>
+        <div id="statusBox"></div>
         <div id="capturedBlack"></div>
         <div id="capturedWhite"></div>
     </main>

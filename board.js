@@ -1,6 +1,6 @@
 class Board {
 
-    static CHECK_PLAYER_TURNS = true;
+    static CHECK_PLAYER_TURNS = false;
 
     constructor(width, height) {
         this.width = width;
@@ -9,10 +9,13 @@ class Board {
         this.pieces = [];
         this.board = [];
         this.kings = [];
-        this.gameState = 1;
+        this.gameStack = [];
+        this.promotionClick = () => { };
+        this.gameState = 1; //0: preparation, 1: running, 2: stopped, 3: waiting for input
         this.playerActive = "l";
         this.capturedBlack = document.getElementById("capturedBlack");
         this.capturedWhite = document.getElementById("capturedWhite");
+        this.statusBox = document.getElementById("statusBox");
         this.currentMoving = null;
         this.field = document.getElementById("chessField");
         const clickCallback = ((e) => {
@@ -37,11 +40,21 @@ class Board {
                         }
                     }
                 } else {
+                    const oldX = this.currentMoving.posX,
+                        oldY = this.currentMoving.posY;
                     if (this.currentMoving.moveTo(e.currentTarget.x, e.currentTarget.y)) {
+                        this.gameStack.push({
+                            piece: this.currentMoving,
+                            from: { x: oldX, y: oldY },
+                            to: { x: this.currentMoving.posX, y: this.currentMoving.posY },
+                            newMovesNumber: this.currentMoving.moves
+                        });
                         if (this.playerActive == "d") {
                             this.playerActive = "l";
+                            this.log("White's turn");
                         } else {
                             this.playerActive = "d";
+                            this.log("Black's turn");
                         }
                         for (var i = 0; i < this.pieces.length; i++) {
                             if (this.pieces[i].color == this.playerActive) {
@@ -58,14 +71,22 @@ class Board {
                     }
                     for (var i = 0; i < this.kings.length; i++) {
                         const king = this.kings[i];
-                        const state = king.testCheck();
-                        if (state == 0) {
-                            this.cells[king.posY][king.posX].classList.remove("check");
-                        } else if (state == 1) {
-                            this.cells[king.posY][king.posX].classList.add("check");
-                        } else if (state == 2) {
+                        if (!king.living) {
                             this.gameState = 2;
-                            console.log("end");
+                            this.log("Game ended!\n Winner: " + (king.color == "d" ? "White" : "Black"));
+                        } else {
+                            const state = king.testCheck();
+                            if (state == 0) {
+                                this.cells[king.posY][king.posX].classList.remove("check");
+                            } else if (state == 1) {
+                                this.cells[king.posY][king.posX].classList.add("check");
+                            } else if (state == 2) {
+                                this.gameState = 2;
+                                this.log("Game ended!\n Winner: " + (king.color == "d" ? "White" : "Black"));
+                            } else if (state == 3) {
+                                this.gameState = 2;
+                                this.log("Game ended!\n Draw...");
+                            }
                         }
                     }
                     this.currentMoving = null;
@@ -124,7 +145,12 @@ class Board {
         this.pieces.push(this.kings[1]);
 
         this.selectPiecePopup = document.getElementById("selectPiecePopup");
+        this.selectPiecePopup.className = "popup hidden";
         this.selectPiecePopup.append("Figur wählen:");
+
+        const popupPieceOnclick = ((e) => {
+            this.promotionClick(e.currentTarget.type);
+        }).bind(this);
 
         for (var col = "d"; col != ""; col = col == "d" ? "l" : "") {
             var pieces = [];
@@ -136,13 +162,15 @@ class Board {
 
             const bishopDiv = document.createElement("div");
             container.push(bishopDiv);
+            bishopDiv.type = "bishop";
             const bishop = document.createElement("img");
-            bishop.src = "images/Chess_p" + col + "t45.svg"
+            bishop.src = "images/Chess_b" + col + "t45.svg"
             pieces.push(bishop);
             bishopDiv.appendChild(bishop);
 
             const knightDiv = document.createElement("div");
             container.push(knightDiv);
+            knightDiv.type = "knight";
             const knight = document.createElement("img");
             knight.src = "images/Chess_n" + col + "t45.svg";
             pieces.push(knight);
@@ -150,6 +178,7 @@ class Board {
 
             const rookDiv = document.createElement("div");
             container.push(rookDiv);
+            rookDiv.type = "rook";
             const rook = document.createElement("img");
             rook.src = "images/Chess_r" + col + "t45.svg";
             pieces.push(rook);
@@ -157,17 +186,11 @@ class Board {
 
             const queenDiv = document.createElement("div");
             container.push(queenDiv);
+            queenDiv.type = "queen";
             const queen = document.createElement("img");
             queen.src = "images/Chess_q" + col + "t45.svg";
             pieces.push(queen);
             queenDiv.appendChild(queen);
-
-            const kingDiv = document.createElement("div");
-            container.push(kingDiv);
-            const king = document.createElement("img");
-            king.src = "images/Chess_k" + col + "t45.svg";
-            pieces.push(king);
-            kingDiv.appendChild(king);
 
             pieces.forEach(piece => {
                 piece.classList.add("chessPiece");
@@ -175,6 +198,7 @@ class Board {
             container.forEach(cont => {
                 cont.classList.add("field5");
                 colorPieces.appendChild(cont);
+                cont.addEventListener("click", popupPieceOnclick);
             });
         }
     }
@@ -193,5 +217,44 @@ class Board {
 
     isInBounds(x, y) {
         return x < this.width && x >= 0 && y < this.height && y >= 0;
+    }
+
+    promote(piece) {
+        if (piece instanceof Pawn) {
+            this.gameState = 3;
+            this.selectPiecePopup.className = "popup " + piece.color + "Pieces";
+            const pieceIndex = this.pieces.indexOf(piece);
+            this.promotionClick = ((type) => {
+                var newPiece = null;
+                switch (type) {
+                    case "bishop":
+                        newPiece = new Bishop(piece.color, this, piece.posX, piece.posY);
+                        break;
+                    case "knight":
+                        newPiece = new Knight(piece.color, this, piece.posX, piece.posY);
+                        break;
+                    case "rook":
+                        newPiece = new Rook(piece.color, this, piece.posX, piece.posY);
+                        break;
+                    case "queen":
+                        newPiece = new Queen(piece.color, this, piece.posX, piece.posY);
+                        break;
+                }
+                if (newPiece != null) {
+                    const x = piece.posX, y = piece.posY;
+                    piece.capture();
+                    this.pieces.splice(pieceIndex, 1);
+                    this.pieces.push(newPiece);
+                    this.board[y][x] = newPiece;
+                    this.gameState = 1;
+                    this.selectPiecePopup.className = "popup hidden";
+                }
+            }).bind(this);
+        }
+    }
+
+    log(text) {
+        this.statusBox.innerText = text;
+        console.log(text);
     }
 }
