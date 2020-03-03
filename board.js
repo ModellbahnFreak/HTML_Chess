@@ -1,6 +1,7 @@
 class Board {
 
     static CHECK_PLAYER_TURNS = false;
+    static URL_PREFIX = "https://upload.wikimedia.org/wikipedia/commons/";
 
     constructor(width, height) {
         this.width = width;
@@ -164,7 +165,7 @@ class Board {
             container.push(bishopDiv);
             bishopDiv.type = "bishop";
             const bishop = document.createElement("img");
-            bishop.src = "images/Chess_b" + col + "t45.svg"
+            bishop.src = Board.URL_PREFIX + "f/ff/Chess_b" + col + "t45.svg"
             pieces.push(bishop);
             bishopDiv.appendChild(bishop);
 
@@ -172,7 +173,7 @@ class Board {
             container.push(knightDiv);
             knightDiv.type = "knight";
             const knight = document.createElement("img");
-            knight.src = "images/Chess_n" + col + "t45.svg";
+            knight.src = Board.URL_PREFIX + "e/ef/Chess_n" + col + "t45.svg";
             pieces.push(knight);
             knightDiv.appendChild(knight);
 
@@ -180,7 +181,7 @@ class Board {
             container.push(rookDiv);
             rookDiv.type = "rook";
             const rook = document.createElement("img");
-            rook.src = "images/Chess_r" + col + "t45.svg";
+            rook.src = Board.URL_PREFIX + "f/ff/Chess_r" + col + "t45.svg";
             pieces.push(rook);
             rookDiv.appendChild(rook);
 
@@ -188,7 +189,7 @@ class Board {
             container.push(queenDiv);
             queenDiv.type = "queen";
             const queen = document.createElement("img");
-            queen.src = "images/Chess_q" + col + "t45.svg";
+            queen.src = Board.URL_PREFIX + "4/47/Chess_q" + col + "t45.svg";
             pieces.push(queen);
             queenDiv.appendChild(queen);
 
