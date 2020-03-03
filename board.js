@@ -2,6 +2,14 @@ class Board {
 
     static CHECK_PLAYER_TURNS = false;
     static URL_PREFIX = "https://upload.wikimedia.org/wikipedia/commons/";
+    static HASH_LUT = {
+        "Chess_kdt45.svg": "f/f0/",
+        "Chess_qdt45.svg": "4/47/",
+        "Chess_rdt45.svg": "f/ff/",
+        "Chess_ndt45.svg": "e/ef/",
+        "Chess_rdt45.svg": "f/ff/",
+        "Chess_pdt45.svg": "c/c7/"
+    };
 
     constructor(width, height) {
         this.width = width;
