@@ -1,7 +1,7 @@
 class Piece {
     constructor(color, board, imgPath, x, y) {
         this.image = document.createElement("img");
-        this.image.src = "images/" + imgPath;
+        this.image.src = Board.URL_PREFIX + imgPath;
         this.image.classList = "chessPiece";
         board.cells[y][x].appendChild(this.image);
         board.board[y][x] = this;
@@ -98,7 +98,7 @@ class Pawn extends Piece {
                 y = 6;
             }
         }
-        super(color, board, "Chess_p" + color + "t45.svg", num, y);
+        super(color, board, "c/c7/Chess_p" + color + "t45.svg", num, y);
     }
 
     get type() {
@@ -207,7 +207,7 @@ class Bishop extends Piece {
                 y = 7;
             }
         }
-        super(color, board, "Chess_b" + color + "t45.svg", x, y);
+        super(color, board, "f/ff/Chess_b" + color + "t45.svg", x, y);
     }
 
     get type() {
@@ -235,7 +235,7 @@ class Knight extends Piece {
                 y = 7;
             }
         }
-        super(color, board, "Chess_n" + color + "t45.svg", x, y);
+        super(color, board, "e/ef/Chess_n" + color + "t45.svg", x, y);
     }
 
     get type() {
@@ -269,7 +269,7 @@ class Rook extends Piece {
                 y = 7;
             }
         }
-        super(color, board, "Chess_r" + color + "t45.svg", x, y);
+        super(color, board, "f/ff/Chess_r" + color + "t45.svg", x, y);
     }
 
     get type() {
@@ -285,12 +285,12 @@ class Rook extends Piece {
 class Queen extends Piece {
     constructor(color, board, xPos, yPos) {
         if (yPos != undefined && xPos != undefined && isFinite(yPos) && isFinite(xPos)) {
-            super(color, board, "Chess_q" + color + "t45.svg", xPos, yPos);
+            super(color, board, "4/47/Chess_q" + color + "t45.svg", xPos, yPos);
         } else {
             if (color == "d") {
-                super(color, board, "Chess_q" + color + "t45.svg", 3, 7);
+                super(color, board, "4/47/Chess_q" + color + "t45.svg", 3, 7);
             } else {
-                super(color, board, "Chess_q" + color + "t45.svg", 3, 0);
+                super(color, board, "4/47/Chess_q" + color + "t45.svg", 3, 0);
             }
         }
     }
@@ -364,9 +364,9 @@ class King extends Piece {
             super(color, board, "Chess_q" + color + "t45.svg", xPos, yPos);
         } else {
             if (color == "d") {
-                super(color, board, "Chess_k" + color + "t45.svg", 4, 7);
+                super(color, board, "f/f0/Chess_k" + color + "t45.svg", 4, 7);
             } else {
-                super(color, board, "Chess_k" + color + "t45.svg", 4, 0);
+                super(color, board, "f/f0/Chess_k" + color + "t45.svg", 4, 0);
             }
         }
     }
