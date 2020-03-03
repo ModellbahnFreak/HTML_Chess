@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Chess</title>
+    <style>
+        main {
+            position: relative;
+        }
+
+        #capturedBlack {
+            position: absolute;
+            top: 0%;
+            left: 50%;
+            width: 50%;
+            height: 50%;
+        }
+
+        #capturedWhite {
+            position: absolute;
+            bottom: 0%;
+            left: 50%;
+            width: 50%;
+            height: 50%;
+        }
+
+        .container {
+            width: 50%;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .field {
+            flex: 0 0 12.5%;
+            max-width: 12.5%;
+            padding-top: 12.5%;
+            position: relative;
+        }
+
+        .field5 {
+            flex: 0 0 20%;
+            max-width: 20%;
+            padding-top: 20%;
+            position: relative;
+        }
+
+        .black {
+            background-color: darkgray;
+        }
+
+        .white {
+            background-color: white;
+        }
+
+        .chessPiece {
+            position: absolute;
+            top: 12.5%;
+            left: 12.5%;
+            height: 75%;
+        }
+
+        .reachable {
+            background: radial-gradient(transparent, yellow);
+        }
+
+        .selected {
+            background: radial-gradient(transparent, orange);
+        }
+
+        .check {
+            background: radial-gradient(transparent, red);
+        }
+
+        .captured {
+            position: unset;
+            height: unset;
+        }
+
+        .popup {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            padding: 1rem;
+            width: 40%;
+            height: 50%;
+            background-color: white;
+            border: 1px solid black;
+            border-radius: 10px;
+        }
+
+        .popup {
+            display: none;
+        }
+
+        .lPiecesDiv,
+        .dPiecesDiv {
+            display: none;
+        }
+
+        .whitePieces .lPiecesDiv,
+        .blackPieces .dPiecesDiv {
+            display: flex;
+        }
+    </style>
+    <script src="piece.js"></script>
+    <script src="board.js"></script>
+</head>
+
+<body>
+    <main role="main">
+        <div class="container" id="chessField">
+        </div>
+        <div id="capturedBlack"></div>
+        <div id="capturedWhite"></div>
+    </main>
+    <div class="popup hidden" id="selectPiecePopup">
+    </div>
+
+    <script>
+        function init() {
+            const board = new Board(8, 8);
+        }
+        init();
+    </script>
+</body>
+
+</html>
