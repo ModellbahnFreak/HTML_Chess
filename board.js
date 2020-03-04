@@ -1,14 +1,28 @@
 class Board {
 
     static CHECK_PLAYER_TURNS = false;
-    static URL_PREFIX = "https://upload.wikimedia.org/wikipedia/commons/";
-    static HASH_LUT = {
-        "Chess_kdt45.svg": "f/f0/",
-        "Chess_qdt45.svg": "4/47/",
-        "Chess_rdt45.svg": "f/ff/",
-        "Chess_ndt45.svg": "e/ef/",
-        "Chess_rdt45.svg": "f/ff/",
-        "Chess_pdt45.svg": "c/c7/"
+    static FILES = {
+        "king0": "https://upload.wikimedia.org/wikipedia/commons/f/f0/Chess_kdt45.svg",
+        "queen0": "https://upload.wikimedia.org/wikipedia/commons/4/47/Chess_qdt45.svg",
+        "rook0": "https://upload.wikimedia.org/wikipedia/commons/f/ff/Chess_rdt45.svg",
+        "knight0": "https://upload.wikimedia.org/wikipedia/commons/e/ef/Chess_ndt45.svg",
+        "bishop0": "https://upload.wikimedia.org/wikipedia/commons/9/98/Chess_bdt45.svg",
+        "pawn0": "https://upload.wikimedia.org/wikipedia/commons/c/c7/Chess_pdt45.svg",
+        "knight1": "https://upload.wikimedia.org/wikipedia/commons/4/42/Chess_klt45.svg",
+        "queen1": "https://upload.wikimedia.org/wikipedia/commons/1/15/Chess_qlt45.svg",
+        "rook1": "https://upload.wikimedia.org/wikipedia/commons/7/72/Chess_rlt45.svg",
+        "bishop1": "https://upload.wikimedia.org/wikipedia/commons/b/b1/Chess_blt45.svg",
+        "knight1": "https://upload.wikimedia.org/wikipedia/commons/7/70/Chess_nlt45.svg",
+        "pawn1": "https://upload.wikimedia.org/wikipedia/commons/4/45/Chess_plt45.svg"
+    };
+    static COLOR = {
+        "Black" : 0,
+        "White": 1,
+        0: "Black",
+        1: "White",
+        "next": (color) => {
+            return (color+ 1) % 2
+        }
     };
 
     constructor(width, height) {
@@ -128,29 +142,29 @@ class Board {
         }
 
         for (var i = 0; i < width; i++) {
-            this.pieces.push(new Pawn("d", this, i));
-            this.pieces.push(new Pawn("l", this, i));
+            this.pieces.push(new Pawn(Board.COLOR.Black, this, i));
+            this.pieces.push(new Pawn(Board.COLOR.White, this, i));
         }
-        this.pieces.push(new Rook("d", this, 0));
-        this.pieces.push(new Rook("d", this, 1));
-        this.pieces.push(new Rook("l", this, 0));
-        this.pieces.push(new Rook("l", this, 1));
+        this.pieces.push(new Rook(Board.COLOR.Black, this, 0));
+        this.pieces.push(new Rook(Board.COLOR.Black, this, 1));
+        this.pieces.push(new Rook(Board.COLOR.White, this, 0));
+        this.pieces.push(new Rook(Board.COLOR.White, this, 1));
 
-        this.pieces.push(new Knight("d", this, 0));
-        this.pieces.push(new Knight("d", this, 1));
-        this.pieces.push(new Knight("l", this, 0));
-        this.pieces.push(new Knight("l", this, 1));
+        this.pieces.push(new Knight(Board.COLOR.Black, this, 0));
+        this.pieces.push(new Knight(Board.COLOR.Black, this, 1));
+        this.pieces.push(new Knight(Board.COLOR.White, this, 0));
+        this.pieces.push(new Knight(Board.COLOR.White, this, 1));
 
-        this.pieces.push(new Bishop("d", this, 0));
-        this.pieces.push(new Bishop("d", this, 1));
-        this.pieces.push(new Bishop("l", this, 0));
-        this.pieces.push(new Bishop("l", this, 1));
+        this.pieces.push(new Bishop(Board.COLOR.Black, this, 0));
+        this.pieces.push(new Bishop(Board.COLOR.Black, this, 1));
+        this.pieces.push(new Bishop(Board.COLOR.White, this, 0));
+        this.pieces.push(new Bishop(Board.COLOR.White, this, 1));
 
-        this.pieces.push(new Queen("d", this));
-        this.kings[0] = new King("d", this);
+        this.pieces.push(new Queen(Board.COLOR.Black, this));
+        this.kings[0] = new King(Board.COLOR.Black, this);
         this.pieces.push(this.kings[0]);
-        this.pieces.push(new Queen("l", this));
-        this.kings[1] = new King("l", this);
+        this.pieces.push(new Queen(Board.COLOR.White, this));
+        this.kings[1] = new King(Board.COLOR.White, this);
         this.pieces.push(this.kings[1]);
 
         this.selectPiecePopup = document.getElementById("selectPiecePopup");
@@ -161,7 +175,7 @@ class Board {
             this.promotionClick(e.currentTarget.type);
         }).bind(this);
 
-        for (var col = "d"; col != ""; col = col == "d" ? "l" : "") {
+        for (var col = Board.COLOR.Black; col <= Board.COLOR.White; col++) {
             var pieces = [];
             var container = [];
             const colorPieces = document.createElement("div");
@@ -173,7 +187,7 @@ class Board {
             container.push(bishopDiv);
             bishopDiv.type = "bishop";
             const bishop = document.createElement("img");
-            bishop.src = Board.URL_PREFIX + "f/ff/Chess_b" + col + "t45.svg"
+            bishop.src = Board.FILES["bishop"+col];
             pieces.push(bishop);
             bishopDiv.appendChild(bishop);
 
@@ -181,7 +195,7 @@ class Board {
             container.push(knightDiv);
             knightDiv.type = "knight";
             const knight = document.createElement("img");
-            knight.src = Board.URL_PREFIX + "e/ef/Chess_n" + col + "t45.svg";
+            knight.src = Board.FILES["knight"+col];
             pieces.push(knight);
             knightDiv.appendChild(knight);
 
@@ -189,7 +203,7 @@ class Board {
             container.push(rookDiv);
             rookDiv.type = "rook";
             const rook = document.createElement("img");
-            rook.src = Board.URL_PREFIX + "f/ff/Chess_r" + col + "t45.svg";
+            rook.src = Board.FILES["rook"+col];
             pieces.push(rook);
             rookDiv.appendChild(rook);
 
@@ -197,7 +211,7 @@ class Board {
             container.push(queenDiv);
             queenDiv.type = "queen";
             const queen = document.createElement("img");
-            queen.src = Board.URL_PREFIX + "4/47/Chess_q" + col + "t45.svg";
+            queen.src = Board.FILES["queen"+col];
             pieces.push(queen);
             queenDiv.appendChild(queen);
 
