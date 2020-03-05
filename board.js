@@ -8,7 +8,7 @@ class Board {
         "knight0": "https://upload.wikimedia.org/wikipedia/commons/e/ef/Chess_ndt45.svg",
         "bishop0": "https://upload.wikimedia.org/wikipedia/commons/9/98/Chess_bdt45.svg",
         "pawn0": "https://upload.wikimedia.org/wikipedia/commons/c/c7/Chess_pdt45.svg",
-        "knight1": "https://upload.wikimedia.org/wikipedia/commons/4/42/Chess_klt45.svg",
+        "king1": "https://upload.wikimedia.org/wikipedia/commons/4/42/Chess_klt45.svg",
         "queen1": "https://upload.wikimedia.org/wikipedia/commons/1/15/Chess_qlt45.svg",
         "rook1": "https://upload.wikimedia.org/wikipedia/commons/7/72/Chess_rlt45.svg",
         "bishop1": "https://upload.wikimedia.org/wikipedia/commons/b/b1/Chess_blt45.svg",
@@ -16,12 +16,12 @@ class Board {
         "pawn1": "https://upload.wikimedia.org/wikipedia/commons/4/45/Chess_plt45.svg"
     };
     static COLOR = {
-        "Black" : 0,
+        "Black": 0,
         "White": 1,
         0: "Black",
         1: "White",
         "next": (color) => {
-            return (color+ 1) % 2
+            return (color + 1) % 2
         }
     };
 
@@ -185,14 +185,14 @@ class Board {
             var container = [];
             const colorPieces = document.createElement("div");
             colorPieces.classList.add("row");
-            colorPieces.classList.add(col + "PiecesDiv");
+            colorPieces.classList.add("PiecesDiv" + col);
             this.selectPiecePopup.appendChild(colorPieces);
 
             const bishopDiv = document.createElement("div");
             container.push(bishopDiv);
             bishopDiv.type = "bishop";
             const bishop = document.createElement("img");
-            bishop.src = Board.FILES["bishop"+col];
+            bishop.src = Board.FILES["bishop" + col];
             pieces.push(bishop);
             bishopDiv.appendChild(bishop);
 
@@ -200,7 +200,7 @@ class Board {
             container.push(knightDiv);
             knightDiv.type = "knight";
             const knight = document.createElement("img");
-            knight.src = Board.FILES["knight"+col];
+            knight.src = Board.FILES["knight" + col];
             pieces.push(knight);
             knightDiv.appendChild(knight);
 
@@ -208,7 +208,7 @@ class Board {
             container.push(rookDiv);
             rookDiv.type = "rook";
             const rook = document.createElement("img");
-            rook.src = Board.FILES["rook"+col];
+            rook.src = Board.FILES["rook" + col];
             pieces.push(rook);
             rookDiv.appendChild(rook);
 
@@ -216,7 +216,7 @@ class Board {
             container.push(queenDiv);
             queenDiv.type = "queen";
             const queen = document.createElement("img");
-            queen.src = Board.FILES["queen"+col];
+            queen.src = Board.FILES["queen" + col];
             pieces.push(queen);
             queenDiv.appendChild(queen);
 
@@ -250,7 +250,7 @@ class Board {
     promote(piece) {
         if (piece instanceof Pawn) {
             this.gameState = 3;
-            this.selectPiecePopup.className = "popup " + piece.color + "Pieces";
+            this.selectPiecePopup.className = "popup Pieces" + piece.color;
             const pieceIndex = this.pieces.indexOf(piece);
             this.promotionClick = ((type) => {
                 var newPiece = null;

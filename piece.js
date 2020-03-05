@@ -1,10 +1,5 @@
 class Piece {
-    constructor(color, board, imgPath, x, y) {
-        this.image = document.createElement("img");
-        this.image.src = Board.URL_PREFIX + imgPath;
-        this.image.classList = "chessPiece";
-        board.cells[y][x].appendChild(this.image);
-        board.board[y][x] = this;
+    constructor(color, board, x, y) {
         this.color = color;
         this.x = x;
         this.y = y;
@@ -12,6 +7,11 @@ class Piece {
         this.living = true;
         this.moves = 0;
         this.specialMovement = null; //type: 0: nothing, 1: casteling, 2: en passant; 3: promotion
+        this.image = document.createElement("img");
+        this.image.src = Board.FILES[this.type + this.color];
+        this.image.classList = "chessPiece";
+        board.cells[y][x].appendChild(this.image);
+        board.board[y][x] = this;
     }
 
     get posX() {
@@ -79,7 +79,7 @@ class Piece {
         this.y = null;
         this.living = false;
         this.image.classList.add("captured");
-        if (this.color == "d") {
+        if (this.color == Board.COLOR.Black) {
             this.board.capturedBlack.appendChild(this.image);
         } else {
             this.board.capturedWhite.appendChild(this.image);
@@ -94,11 +94,11 @@ class Pawn extends Piece {
         if (yPos != null && isFinite(yPos) && isFinite(num)) {
             y = yPos;
         } else {
-            if (color == "d") {
+            if (color == Board.COLOR.Black) {
                 y = 6;
             }
         }
-        super(color, board, "c/c7/Chess_p" + color + "t45.svg", num, y);
+        super(color, board, num, y);
     }
 
     get type() {
@@ -106,7 +106,7 @@ class Pawn extends Piece {
     }
 
     canPromote(x, y) {
-        if ((this.color == "l" && y == 7) || (this.color == "d" && y == 0)) {
+        if ((this.color == Board.COLOR.White && y == 7) || (this.color == Board.COLOR.Black && y == 0)) {
             this.specialMovement = {
                 type: 3,
                 destination: { x: x, y: y },
@@ -122,7 +122,7 @@ class Pawn extends Piece {
             const dY = y - this.y;
 
             if (dX == 0) {
-                if (this.color == "d") {
+                if (this.color == Board.COLOR.Black) {
                     if (dY < 0 && dY >= -2 && (this.moves == 0 || dY >= -1)) {
                         if (this.board.isFree(this.x, this.y - 1) && (this.board.isFree(this.x, this.y - 2) || dY == -1)) {
                             this.canPromote(x, y);
@@ -138,12 +138,12 @@ class Pawn extends Piece {
                     }
                 }
             } else if (Math.abs(dX) == 1 && !this.board.isFree(x, y) && this.board.getColorAt(x, y) != this.color) {
-                if ((this.color == "d" && dY == -1) || dY == 1) {
+                if ((this.color == Board.COLOR.Black && dY == -1) || dY == 1) {
                     this.canPromote(x, y);
                     return true;
                 }
             } else if (Math.abs(dX) == 1 && this.board.isFree(x, y)) {
-                if (this.color == "d") {
+                if (this.color == Board.COLOR.Black) {
                     const otherPiece = this.board.board[y + 1][x];
                     if (dY == -1 && otherPiece != null && otherPiece.color != this.color && otherPiece.type == this.type && otherPiece.moves == 1) {
                         if (otherPiece.specialMovement != null && otherPiece.specialMovement.type == 2 && otherPiece.specialMovement.hasMoved == 2) {
@@ -203,11 +203,11 @@ class Bishop extends Piece {
             if (num == 1) {
                 x = 5;
             }
-            if (color == "d") {
+            if (color == Board.COLOR.Black) {
                 y = 7;
             }
         }
-        super(color, board, "f/ff/Chess_b" + color + "t45.svg", x, y);
+        super(color, board, x, y);
     }
 
     get type() {
@@ -231,11 +231,11 @@ class Knight extends Piece {
             if (num == 1) {
                 x = 6;
             }
-            if (color == "d") {
+            if (color == Board.COLOR.Black) {
                 y = 7;
             }
         }
-        super(color, board, "e/ef/Chess_n" + color + "t45.svg", x, y);
+        super(color, board, x, y);
     }
 
     get type() {
@@ -265,11 +265,11 @@ class Rook extends Piece {
             if (num == 1) {
                 x = 7;
             }
-            if (color == "d") {
+            if (color == Board.COLOR.Black) {
                 y = 7;
             }
         }
-        super(color, board, "f/ff/Chess_r" + color + "t45.svg", x, y);
+        super(color, board, x, y);
     }
 
     get type() {
@@ -285,12 +285,12 @@ class Rook extends Piece {
 class Queen extends Piece {
     constructor(color, board, xPos, yPos) {
         if (yPos != undefined && xPos != undefined && isFinite(yPos) && isFinite(xPos)) {
-            super(color, board, "4/47/Chess_q" + color + "t45.svg", xPos, yPos);
+            super(color, board, xPos, yPos);
         } else {
-            if (color == "d") {
-                super(color, board, "4/47/Chess_q" + color + "t45.svg", 3, 7);
+            if (color == Board.COLOR.Black) {
+                super(color, board, 3, 7);
             } else {
-                super(color, board, "4/47/Chess_q" + color + "t45.svg", 3, 0);
+                super(color, board, 3, 0);
             }
         }
     }
@@ -361,12 +361,12 @@ class Queen extends Piece {
 class King extends Piece {
     constructor(color, board, xPos, yPos) {
         if (yPos != undefined && xPos != undefined && isFinite(yPos) && isFinite(xPos)) {
-            super(color, board, "Chess_q" + color + "t45.svg", xPos, yPos);
+            super(color, board, xPos, yPos);
         } else {
-            if (color == "d") {
-                super(color, board, "f/f0/Chess_k" + color + "t45.svg", 4, 7);
+            if (color == Board.COLOR.Black) {
+                super(color, board, 4, 7);
             } else {
-                super(color, board, "f/f0/Chess_k" + color + "t45.svg", 4, 0);
+                super(color, board, 4, 0);
             }
         }
     }
