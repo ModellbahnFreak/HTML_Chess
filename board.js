@@ -2,6 +2,11 @@ class Board {
 
     static CHECK_PLAYER_TURNS = false;
 
+    //TODO:
+    //  - Aus Schach rausziehen + Selbeer nicht ins Schach ziehen
+    //  - König kann bei Bauern ins Schach ziehen
+    //  - Materialdifferenz statt geschlagenen Figuren
+
     constructor(width, height) {
         this.width = width;
         this.height = height;
